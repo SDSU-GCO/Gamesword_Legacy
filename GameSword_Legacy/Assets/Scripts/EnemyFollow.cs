@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// Basic class for following a target to within a certain distance
+// Specifies both hearing and sight range (hearing is currently just based on distance).
 namespace GS
 {
     public class EnemyFollow : MonoBehaviour
@@ -15,7 +17,7 @@ namespace GS
         protected float currentDistance; // Current distance from target
         protected bool sighted = false;
         protected bool heard = false;
-        protected Vector3 targetLocation;
+        protected Vector3 targetLocation; // Location to move to
         public LayerMask targetMask;
         public LayerMask wallMask;
         NavMeshAgent agent;
@@ -34,12 +36,14 @@ namespace GS
         protected virtual void findTarget()
         {
             float range = sightRange > hearRange ? sightRange : hearRange; // Uses the greater of the two values
-            Collider [] colliders = Physics.OverlapSphere(transform.position, range, targetMask);
+            Collider [] colliders = Physics.OverlapSphere(transform.position, range, targetMask); // Only selects objects with target tags
 
             if (colliders.Length > 0)
             {
                 currentDistance = Vector3.Distance(colliders[0].transform.position, transform.position);
+                // Hearing check
                 heard = (currentDistance < hearRange);
+                // Sight check
                 if (Physics.Linecast(transform.position, colliders[0].transform.position, wallMask))
                 {
                     sighted = false;
@@ -59,7 +63,6 @@ namespace GS
 
         protected virtual void moveToTarget()
         {
-            Debug.Log(currentDistance);
             if ((sighted || heard) && currentDistance > targetDistance && currentDistance < followRange)
             {
                 agent.SetDestination(targetLocation);

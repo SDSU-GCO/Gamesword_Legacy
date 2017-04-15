@@ -2,28 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Enemy damage functions
 namespace GS
 {
-    enum DamageType { MELEE, MAGIC, SUPER_SPECIAL };
+    public enum DamageType { MELEE, MAGIC, SUPER_SPECIAL };
     public enum Element { NULL_DAMAGE, FIRE_DAMAGE, ICE_DAMAGE, LIGHTNING_DAMAGE };
 
     //wtf is the keyword! KEYWORD!!!!
     public class Enemy : PoolableObject
     {
-        public float hp;
+        public float hpMax;
+        protected float hp;
         public float knockBack;
         public float stunned;
         public string enemyName;
+        bool alive = true;
 
-        public EnemyDefensesObject EnemyDamage;
-        public EnemyDefensesObject EnemyKnockback;
-        public EnemyDefensesObject EnemyHitStun;
+        public EnemyDefenses EnemyDamage;
+        public EnemyDefenses EnemyKnockback;
+        public EnemyDefenses EnemyHitStun;
 
         Vector3 originalPosition;
         Quaternion originalRotation;
 
         void awake()
         {
+            hp = hpMax;
             originalPosition = transform.position;
             originalRotation = transform.rotation;
         }
@@ -31,15 +35,20 @@ namespace GS
         public override void reset()
         {
             gameObject.SetActive(true);
+            alive = true;
             transform.position = originalPosition;
             transform.rotation = originalRotation;
         }
 
-        void takeDamage(DamageType damageType, float attackPower, float attackKnockback, float attackHitstun, Element element = Element.NULL_DAMAGE)
+        public void takeDamage(DamageType damageType, float attackPower, float attackKnockback, float attackHitstun, Element element = Element.NULL_DAMAGE)
         {
+            if (!alive)
+            {
+                return;
+            }
             float res = 0f;
             float elemRes = 0f;
-            EnemyDefensesObject TempEnemyStruct = EnemyDamage;
+            EnemyDefenses TempEnemyStruct = EnemyDamage;
     
             for (int i = 0; i < 3; i++)
             {
@@ -128,12 +137,34 @@ namespace GS
                         }
                         break;
                 }//end switch
-            }//end for
+            }//end for.
+            if (hp < 0)
+            {
+                death();
+            }
             Debug.Log(hp);
-            Debug.Log(knockBack);
-            Debug.Log(stunned);
+          //Debug.Log(knockBack);
+      //    Debug.Log(stunned);
             return;
         }
-
+        void death()
+        {
+            alive = false;
+            if (hp < -(hpMax/2))
+            {
+                Debug.Log("Gibbed");
+                StartCoroutine(stop(2f));
+            }
+            else
+            {
+                Debug.Log("Dead");
+                StartCoroutine(stop(3f));
+            }
+        }
+        IEnumerator stop(float t)
+        {
+            yield return new WaitForSeconds(t);
+            gameObject.SetActive(false);
+        }
     }
 }

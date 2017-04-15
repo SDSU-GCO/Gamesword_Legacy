@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Simple test for doing damage
 namespace GS
 {
     public class GameSword : MonoBehaviour
     {
         PlayerStats stats;
-        Collider col;
-        // Element currentElement;
 
-        // Use this for initialization
         void Start()
         {
             stats = GetComponentInParent<PlayerStats>();
-            col = GetComponent<Collider>();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnTriggerEnter(Collider other)
         {
-
+            if (other.gameObject.tag == "Enemy")
+            {
+                other.GetComponent<Enemy>().takeDamage(DamageType.MELEE, 10f, 10f, 10f);
+            }
         }
     }
 }
