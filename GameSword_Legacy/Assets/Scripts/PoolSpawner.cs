@@ -7,6 +7,7 @@ namespace GS
     public class PoolSpawner : Spawner
     {
         List<PoolableObject> pooledObjects = new List<PoolableObject>();
+        int lastfound = 0;
 
         public override IEnumerator spawn()
         {
@@ -22,7 +23,7 @@ namespace GS
                 }
 
                 int num = (int)Random.Range(0, objects.Length);
-                PoolableObject p = pooledObjects.Find(x => !x.gameObject.activeSelf && x.objectNum == num);
+                PoolableObject p = find(num);
 
                 if (p == null)
                 {
@@ -33,6 +34,25 @@ namespace GS
                 p.reset();
                 yield return new WaitForSeconds(interval);
             }
+        }
+
+        PoolableObject find(int num)
+        {
+            for (int i = lastfound; i < pooledObjects.Count; i++)
+            {
+                if (pooledObjects[i].gameObject.activeSelf && pooledObjects[i].objectNum == num)
+                {
+                    return pooledObjects[i];
+                }
+            }
+            for (int i = lastfound-1; i >= 0; i--)
+            {
+                if (pooledObjects[i].gameObject.activeSelf && pooledObjects[i].objectNum == num)
+                {
+                    return pooledObjects[i];
+                }
+            }
+            return null;
         }
     }
 }

@@ -12,37 +12,37 @@ namespace GS
 
         void Start()
         {
-            foreach (Spawner s in spawners)
+            for (int i = 0; i < spawners.Length; i++)
             {
-                s.gameObject.SetActive(false);
+                spawners[i].gameObject.SetActive(false);
             }
         }
 
         void OnTriggerEnter(Collider c)
         {
-            if (c.gameObject.tag == "Player")
+            if (c.CompareTag(GameManager.playerTag))
             {
-                foreach (Spawner s in spawners)
+                for (int i = 0; i  < spawners.Length; i++)
                 {
                     if (!started)
                     {
-                        s.gameObject.SetActive(true);
+                        spawners[i].gameObject.SetActive(true);
                         started = true;
                     }
                     else
                     {
-                        s.startSpawn();
+                        spawners[i].startSpawn();
                     }
                 }
             }
         }
         void OnTriggerExit(Collider c)
         {
-            if (c.gameObject.tag == "Player")
+            if (c.CompareTag(GameManager.playerTag))
             {
-                foreach (Spawner s in spawners)
+                for (int i = 0; i < spawners.Length; i++)
                 {
-                    s.stopSpawn();
+                    spawners[i].stopSpawn();
                 }
             }
         }

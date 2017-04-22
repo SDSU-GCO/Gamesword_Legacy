@@ -7,6 +7,7 @@ namespace GS
     public class GameManager : MonoBehaviour
     {
         static GameManager current;
+        public const string playerTag = "Player";
 
         // Use this for initialization
         void Start()

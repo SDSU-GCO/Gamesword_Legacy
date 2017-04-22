@@ -45,26 +45,12 @@ namespace GS
 
         public void stopSpawn() // Stops spawning based on whether or not spawner is an unlimited spawner
         {
-            if (limitSpawns)
-            {
-                StopAllCoroutines();
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
+            StopAllCoroutines();
         }
 
         public void startSpawn() // Restarts spawning based on whether or not spawner is an unlimited spawner 
         {
-            if (limitSpawns)
-            {
-                StartCoroutine(spawn());
-            }
-            else
-            {
-                gameObject.SetActive(true);
-            }
+            StartCoroutine(spawn());
         }
 
     }
