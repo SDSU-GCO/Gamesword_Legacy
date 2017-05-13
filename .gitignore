@@ -1,4 +1,41 @@
+# ==========
+# DEV - Ignore Everything
+# Will change once we figure out what to ignore
+# ==========
 *
+
+# ==========
+# DEV - Unity files that we don't need
+# Will change once we figure out what to ignore
+# ==========
+#Temp/
+#Library/
+#ExportedObj/
+#obj/
+#*.svd
+#*.userprefs
+#/*.csproj
+#*.pidb
+#*.suo
+#/*.sln
+#*.user
+#*.unityproj
+#*.booproj
+ 
+# ==========
+# OS files that we don't need
+# ==========
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==========
+# DEV - Unignore Code
+# ==========
 !*/
 !*.cs
 !.gitignore
